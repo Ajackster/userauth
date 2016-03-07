@@ -22,11 +22,19 @@ app.get('/', function(req, res) {
 
 app.post('/login', function(req, res) {
 	var username = "\'" + req.body.username + "\'";
-	var password = req.body.password;
+	var inputPassword = req.body.password;
 	var getUserInfo = "SELECT * FROM users WHERE username=" + username;
 
 	client.query(getUserInfo, function(err, results) {
-		console.log(results.username); 
+		var dbPassword = results.rows[0].password;
+		bcrypt.compare(inputPassword, dbPassword, function(err, res) {
+    			if(res === true) {
+				console.log("Success");
+			}
+			if(res === false) {
+				console.log("Failed");
+			}
+		});
 	}) 
 })
 
